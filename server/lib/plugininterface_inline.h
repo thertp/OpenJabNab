@@ -96,5 +96,5 @@ inline QDir * PluginInterface::GetLocalHTTPFolder() const
 
 inline QByteArray PluginInterface::GetBroadcastHTTPPath(QString f) const
 {
-	return QString("broadcast/%1/%2").arg(httpFolder, f).toAscii();
+	return QString("broadcast/%1/%2").arg(httpFolder, f).toLatin1();
 }

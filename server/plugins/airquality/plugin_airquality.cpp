@@ -5,6 +5,7 @@
 #include <QNetworkReply>
 #include <QMapIterator>
 #include <QRegExp>
+#include <QUrlQuery>
 #include <memory>
 #include "bunny.h"
 #include "bunnymanager.h"
@@ -16,8 +17,6 @@
 #include "settings.h"
 #include "ttsmanager.h"
 
-
-Q_EXPORT_PLUGIN2(plugin_airquality, PluginAirquality)
 
 PluginAirquality::PluginAirquality():PluginInterface("airquality", "Air quality plugin", BunnyZtampPlugin)
 {
@@ -270,8 +269,9 @@ PluginAir_Worker::PluginAir_Worker(PluginAirquality * p, Bunny * bu, QString c, 
 void PluginAir_Worker::run()
 {
 	qualities << "inconnue" << "très bonne" << "très bonne" << "bonne" << "bonne" << "moyenne" << "médiocre" << "médiocre" << "mauvaise" << "mauvaise" << "très mauvaise";
-	QUrl* data = new QUrl("http://data/?" + buffer);
-	QStringList cities = data->queryItemValue("NomVille").toLower().split(",");
+	QUrl data = QUrl("http://data/?" + buffer);
+	QUrlQuery q = QUrlQuery(data);
+	QStringList cities = q.queryItemValue("NomVille").toLower().split(",");
 	plugin->SetSettings("config/city", cities);
 
 	if(city != "")
@@ -281,15 +281,15 @@ void PluginAir_Worker::run()
 		QByteArray message;
 		if(index != -1)
 		{
-			QStringList i1 = data->queryItemValue("I1").split(",", QString::KeepEmptyParts);
-			QStringList i2 = data->queryItemValue("I2").split(",", QString::KeepEmptyParts);
+			QStringList i1 = q.queryItemValue("I1").split(",", QString::KeepEmptyParts);
+			QStringList i2 = q.queryItemValue("I2").split(",", QString::KeepEmptyParts);
 			quality = (i2.at(index) != "" ? i2.at(index) : i1.at(index)).toInt();
 		}
 		else
 		{
 			quality = 0;
 		}
-		QString text = QString::fromUtf8(("La qualité de l'air à "+city+" est "+qualities.at(quality)).toAscii());
+		QString text = QString::fromUtf8(("La qualité de l'air à "+city+" est "+qualities.at(quality)).toLatin1());
 		QByteArray q = TTSManager::CreateNewSound(text, "Claire");
 		message = "MU "+q+"\nPL 3\nMW\n";
 		emit done(true, bunny, message);

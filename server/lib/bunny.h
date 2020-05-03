@@ -13,7 +13,7 @@
 #include "plugininterface.h"
 
 class XmppHandler;
-class OJN_EXPORT Bunny : QObject, public ApiHandler<Bunny>
+class OJN_EXPORT Bunny : public QObject, public ApiHandler<Bunny>
 {
 	friend class BunnyManager;
 	Q_OBJECT

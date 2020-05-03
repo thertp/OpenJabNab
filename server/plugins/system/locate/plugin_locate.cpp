@@ -6,8 +6,6 @@
 #include "log.h"
 #include "settings.h"
 
-Q_EXPORT_PLUGIN2(plugin_locate, PluginLocate)
-
 PluginLocate::PluginLocate():PluginInterface("locate", "Manage Locate requests", RequiredPlugin) {}
 
 bool PluginLocate::HttpRequestHandle(HTTPRequest & request)
@@ -16,7 +14,7 @@ bool PluginLocate::HttpRequestHandle(HTTPRequest & request)
 	if (uri.startsWith("/vl/locate.jsp"))
 	{
 		QString serialnumber = request.GetArg("sn").remove(':');
-		Bunny * bunny = BunnyManager::GetBunny(this, serialnumber.toAscii());
+		Bunny * bunny = BunnyManager::GetBunny(this, serialnumber.toLatin1());
 
 		QString pingServer = bunny->GetPluginSetting(GetName(), "PingServer", GlobalSettings::GetString("OpenJabNabServers/PingServer")).toString(); 
 		QString broadServer = bunny->GetPluginSetting(GetName(), "BroadServer", GlobalSettings::GetString("OpenJabNabServers/BroadServer")).toString(); 
@@ -29,7 +27,7 @@ bool PluginLocate::HttpRequestHandle(HTTPRequest & request)
 		locateString += QString("ping %1\n").arg(pingServer);
 		locateString += QString("broad %1\n").arg(broadServer);
 		locateString += QString("xmpp_domain %1:%2\n").arg(xmppServer, xmppPort);
-		request.reply = locateString.toAscii();
+		request.reply = locateString.toLatin1();
 
 		bunny->SetGlobalSetting("LastLocate", QDateTime::currentDateTime());
 		bunny->SetGlobalSetting("LastLocateString", locateString);

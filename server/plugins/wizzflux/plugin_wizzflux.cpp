@@ -4,14 +4,13 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QUrlQuery>
 #include "account.h"
 #include "plugin_wizzflux.h"
 #include "bunny.h"
 #include "cron.h"
 #include "bunnymanager.h"
 #include "messagepacket.h"
-
-Q_EXPORT_PLUGIN2(plugin_wizzflux, PluginWizzflux)
 
 PluginWizzflux::PluginWizzflux():PluginInterface("wizzflux", "Various Flux by Wizz.cc", BunnyZtampPlugin) {
 	Flist = GetSettings("ListFlux", QStringList()).toStringList();
@@ -98,12 +97,13 @@ void PluginWizzflux::OnBunnyDisconnect(Bunny * b)
 bool PluginWizzflux::streamFlux(Bunny * b, QString const flux)
 {
     QUrl url("http://nabz.wizz.cc/_plugz/");
-	url.addEncodedQueryItem("p", flux.toAscii());
+    QUrlQuery q = QUrlQuery(url);
+	q.addQueryItem("p", QUrl::toPercentEncoding(flux.toLatin1()));
 	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
 	manager->setProperty("BunnyID", b->GetID());
 	connect(manager, SIGNAL(finished(QNetworkReply*)),this, SLOT(analyse(QNetworkReply*)));
 	manager->get(QNetworkRequest(url));
-	//QByteArray message = "ST "+url.toAscii()+"\nPL "+QString::number(qrand() % 8).toAscii()+"\nMW\n";
+	//QByteArray message = "ST "+url.toLatin1()+"\nPL "+QString::number(qrand() % 8).toLatin1()+"\nMW\n";
 	return true;
 }
 
@@ -114,8 +114,8 @@ void PluginWizzflux::analyse(QNetworkReply* networkReply)
 		if(bunny) {
             QString message = QString::fromUtf8(networkReply->readAll());
         	if(message != "" && bunny->IsIdle()) {
-                message = "ST "+message.toAscii()+"\nPL "+QString::number(qrand() % 8).toAscii()+"\nMW\n";
-                bunny->SendPacket(MessagePacket(message.toAscii()));
+                message = "ST "+message.toLatin1()+"\nPL "+QString::number(qrand() % 8).toLatin1()+"\nMW\n";
+                bunny->SendPacket(MessagePacket(message.toLatin1()));
             }
 		}
 	}

@@ -9,6 +9,7 @@
 class PluginAuth : public PluginAuthInterface
 {
 	Q_OBJECT
+	Q_PLUGIN_METADATA(IID OPENJABNAB_PLUGINAUTH_IFACE_VERSION_STRING)
 	Q_INTERFACES(PluginInterface)
 
 public:

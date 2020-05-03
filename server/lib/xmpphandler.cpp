@@ -25,7 +25,7 @@ XmppHandler::XmppHandler(QTcpSocket * s):pluginManager(PluginManager::Instance()
 	connect(incomingXmppSocket, SIGNAL(disconnected()), this, SLOT(Disconnect()));
 	connect(incomingXmppSocket, SIGNAL(readyRead()), this, SLOT(HandleBunnyXmppMessage()));
 
-	OjnXmppDomain = GlobalSettings::GetString("OpenJabNabServers/XmppServer").toAscii();
+	OjnXmppDomain = GlobalSettings::GetString("OpenJabNabServers/XmppServer").toLatin1();
 }
 
 void XmppHandler::Disconnect()
@@ -123,7 +123,7 @@ void XmppHandler::HandleBunnyXmppMessage()
 		{
 			if(rx.setPattern("<bind[^>]*><resource>([^<]*)</resource></bind>"), rx.indexIn(iq.Content()) != -1)
 			{
-				QByteArray resource = rx.cap(1).toAscii();
+				QByteArray resource = rx.cap(1).toLatin1();
 				bunny->SetXmppResource(resource);
 
 				QByteArray from = bunny->GetID()+"@"+OjnXmppDomain+"/"+resource;
@@ -155,7 +155,7 @@ void XmppHandler::HandleBunnyXmppMessage()
 			{
                         	if(rx.setPattern("from='"+bunny->GetID()+"@"+OjnXmppDomain+"/([^']+)'"), rx.indexIn(data) != -1)
 	                        {
-        	                        QByteArray resource = rx.cap(1).toAscii();
+        	                        QByteArray resource = rx.cap(1).toLatin1();
                 	                bunny->SetXmppResource(resource);
                         	}
 				handled = true;
@@ -172,8 +172,8 @@ void XmppHandler::HandleBunnyXmppMessage()
 	}
 	else if(rx.setPattern("<presence from='(.*)' id='(.*)'></presence>"), rx.indexIn(data) != -1)
 	{
-		QByteArray from = rx.cap(1).toAscii();
-		QByteArray id = rx.cap(2).toAscii();
+		QByteArray from = rx.cap(1).toLatin1();
+		QByteArray id = rx.cap(2).toLatin1();
 		WriteToBunnyAndLog("<presence from='"+from+"' to='"+from+"' id='"+id+"'/>");
 		handled = true;
 	}
@@ -243,17 +243,17 @@ QList<QByteArray> XmppHandler::XmlParse(QByteArray const& data)
 	{
 		if (rx.setPattern("^(<\\?xml[^>]*\\?><stream:stream[^>]*>)"), rx.indexIn(msgQueue) != -1)
 		{
-			list << rx.cap(1).toAscii();
+			list << rx.cap(1).toLatin1();
 			msgQueue.remove(0, rx.matchedLength());
 		}
 		else if (rx.setPattern("^(<[^>]*/>)"), rx.indexIn(msgQueue) != -1)
 		{
-			list << rx.cap(1).toAscii();
+			list << rx.cap(1).toLatin1();
 			msgQueue.remove(0, rx.matchedLength());
 		}
 		else if (rx.setPattern("^(</[^>]*>)"), rx.indexIn(msgQueue) != -1) // Special case for </stream:stream>
 		{
-			list << rx.cap(1).toAscii();
+			list << rx.cap(1).toLatin1();
 			msgQueue.remove(0, rx.matchedLength());
 		}
 		else
@@ -275,7 +275,7 @@ QList<QByteArray> XmppHandler::XmlParse(QByteArray const& data)
 				// Doesn't find the end tag... wait next message
 				break;
 			}
-			list << rx.cap(1).toAscii();
+			list << rx.cap(1).toLatin1();
 			msgQueue.remove(0, rx.matchedLength());
 		}
 	}

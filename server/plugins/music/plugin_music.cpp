@@ -1,7 +1,6 @@
 #include <QDateTime>
 #include <QCryptographicHash>
 #include <QXmlStreamReader>
-#include <QHttp>
 #include <QMapIterator>
 #include <QRegExp>
 #include <QUrl>
@@ -15,8 +14,6 @@
 #include "plugin_music.h"
 #include "settings.h"
 #include "ttsmanager.h"
-
-Q_EXPORT_PLUGIN2(plugin_music, PluginMusic)
 
 PluginMusic::PluginMusic():PluginInterface("music", "Music", BunnyZtampPlugin) {}
 
@@ -41,7 +38,7 @@ bool PluginMusic::OnRFID(Ztamp * z, Bunny * b)
 	{
 		LogInfo(QString("Will now play from ztamp (user choice) : %1").arg(music));
 
-		QByteArray message = "ST "+GetBroadcastHTTPPath(music)+"\nPL "+QString::number(qrand() % 8).toAscii()+"\nMW\n";
+		QByteArray message = "ST "+GetBroadcastHTTPPath(music)+"\nPL "+QString::number(qrand() % 8).toLatin1()+"\nMW\n";
 		b->SendPacket(MessagePacket(message));
 		return true;
 	}
@@ -55,7 +52,7 @@ bool PluginMusic::OnRFID(Bunny * b, QByteArray const& tag)
 	{
 		LogInfo(QString("Will now play (user choice) : %1").arg(music));
 
-		QByteArray message = "ST "+GetBroadcastHTTPPath(music)+"\nPL "+QString::number(qrand() % 8).toAscii()+"\nMW\n";
+		QByteArray message = "ST "+GetBroadcastHTTPPath(music)+"\nPL "+QString::number(qrand() % 8).toLatin1()+"\nMW\n";
 		b->SendPacket(MessagePacket(message));
 		return true;
 	}
@@ -86,7 +83,7 @@ void PluginMusic::getMusicList(Bunny * b)
 			QString music = musics.at(index);
 			LogInfo(QString("Will now play (random) : %1").arg(music));
 
-			QByteArray message = "ST "+GetBroadcastHTTPPath(music)+"\nPL "+QString::number(qrand() % 8).toAscii()+"\nMW\n";
+			QByteArray message = "ST "+GetBroadcastHTTPPath(music)+"\nPL "+QString::number(qrand() % 8).toLatin1()+"\nMW\n";
 			b->SendPacket(MessagePacket(message));
 		}
 

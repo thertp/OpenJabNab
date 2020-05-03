@@ -5,8 +5,6 @@
 #include "ttsmanager.h"
 #include "messagepacket.h"
 
-Q_EXPORT_PLUGIN2(plugin_msgall, PluginMsgall)
-
 PluginMsgall::PluginMsgall():PluginInterface("msgall", "Send a message to all the bunnies connected on the server",SystemPlugin)
 {
 }

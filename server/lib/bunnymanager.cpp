@@ -23,7 +23,7 @@ void BunnyManager::LoadAllBunnies()
 	bunniesDir.setNameFilters(filters);
 	foreach (QFileInfo file, bunniesDir.entryInfoList(QDir::Files))
 	{
-		GetBunny(file.baseName().toAscii());
+		GetBunny(file.baseName().toLatin1());
 	}
 }
 
@@ -57,7 +57,7 @@ API_CALL(BunnyManager::Api_RemoveBunny)
 		return new ApiManager::ApiError("Access denied");
 
 	QString serial = hRequest.GetArg("serial");
-	QByteArray hexSerial = QByteArray::fromHex(serial.toAscii());
+	QByteArray hexSerial = QByteArray::fromHex(serial.toLatin1());
 	if(!listOfBunnies.contains(hexSerial))
 		return new ApiManager::ApiError(QString("Bunny '%1' does not exist").arg(serial));
 
@@ -226,7 +226,7 @@ API_CALL(BunnyManager::Api_AddBunny) {
 	if(!account.HasAccess(Account::AcBunnies,Account::Write))
 		return new ApiManager::ApiError("Access denied");
 
-	QByteArray bunnyID = hRequest.GetArg("serial").toAscii();
+	QByteArray bunnyID = hRequest.GetArg("serial").toLatin1();
 	if(listOfBunnies.contains(bunnyID))
 		return new ApiManager::ApiError("Bunny already exists");
 

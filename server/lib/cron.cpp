@@ -92,7 +92,7 @@ unsigned int Cron::Register(PluginInterface * p, unsigned int interval, unsigned
 	// Compute next run
 	QDateTime now = QDateTime::currentDateTime();
 	QDateTime time = now;
-	time.addDays(-1);
+	time = time.addDays(-1);
 	time.setTime(QTime(offsetH, offsetM));
 	while(time < now)
 		time = time.addSecs(interval*60);

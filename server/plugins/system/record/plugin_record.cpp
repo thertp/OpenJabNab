@@ -7,8 +7,6 @@
 #include "log.h"
 #include "settings.h"
 
-Q_EXPORT_PLUGIN2(plugin_record, PluginRecord)
-
 PluginRecord::PluginRecord():PluginInterface("record", "Manage Record requests", SystemPlugin)
 {
 	std::unique_ptr<QDir> dir(GetLocalHTTPFolder());
@@ -29,7 +27,7 @@ bool PluginRecord::HttpRequestHandle(HTTPRequest & request)
 		QFile wavFile( filepath );
 		if(wavFile.open(QFile::WriteOnly)) {
 			wavFile.write(request.GetPostRaw());
-			Bunny * b = BunnyManager::GetBunny(this, serialnumber.toAscii());
+			Bunny * b = BunnyManager::GetBunny(this, serialnumber.toLatin1());
 			b->SetGlobalSetting("LastRecord", filename);
 			wavFile.close();
 		} else {

@@ -14,6 +14,8 @@
 #include "pluginapihandler.h"
 #include "settings.h"
 
+#define OPENJABNAB_PLUGIN_IFACE_VERSION_STRING "org.toms.openjabnab.PluginInterface/1.0"
+
 class Account; 
 class AmbientPacket;
 class Bunny;
@@ -91,6 +93,6 @@ private:
 
 #include "plugininterface_inline.h"
 
-Q_DECLARE_INTERFACE(PluginInterface,"org.toms.openjabnab.PluginInterface/1.0")
+Q_DECLARE_INTERFACE(PluginInterface, OPENJABNAB_PLUGIN_IFACE_VERSION_STRING)
 
 #endif

@@ -13,8 +13,6 @@
 #include "settings.h"
 #include "ttsmanager.h"
 
-Q_EXPORT_PLUGIN2(plugin_memo, PluginMemo)
-
 PluginMemo::PluginMemo():PluginInterface("memo", "Memo", BunnyPlugin)
 {
 	std::unique_ptr<QDir> dir(GetLocalHTTPFolder());

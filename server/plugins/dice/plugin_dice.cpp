@@ -6,8 +6,6 @@
 #include "messagepacket.h"
 #include "plugin_dice.h"
 
-Q_EXPORT_PLUGIN2(plugin_dice, PluginDice)
-
 PluginDice::PluginDice():PluginInterface("dice", "Dice roll",BunnyZtampPlugin)
 {
 	// Initialize the randomizer

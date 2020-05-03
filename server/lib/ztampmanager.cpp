@@ -32,7 +32,7 @@ void ZtampManager::LoadAllZtamps()
 	ztampsDir.setNameFilters(filters);
 	foreach (QFileInfo file, ztampsDir.entryInfoList(QDir::Files))
 	{
-		GetZtamp(file.baseName().toAscii());
+		GetZtamp(file.baseName().toLatin1());
 	}
 }
 

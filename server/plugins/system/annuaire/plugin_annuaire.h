@@ -13,6 +13,7 @@ typedef struct {
 class PluginAnnuaire : public PluginInterface
 {
 	Q_OBJECT
+	Q_PLUGIN_METADATA(IID OPENJABNAB_PLUGIN_IFACE_VERSION_STRING)
 	Q_INTERFACES(PluginInterface)
 
 public:
@@ -29,7 +30,8 @@ public:
 	PLUGIN_API_CALL(Api_SearchBunnyByName);
 	PLUGIN_API_CALL(Api_SearchBunnyByMac);
 	PLUGIN_API_CALL(Api_VerifyMacToken);
-
+private:
+	QList<BunnyInfos> SearchBunny(QString endurl);
 };
 
 #endif

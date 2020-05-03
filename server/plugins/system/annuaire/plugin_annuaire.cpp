@@ -1,12 +1,12 @@
-#include <QHttp>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 #include <QDebug>
 #include <QUrl>
 #include <QXmlStreamReader>
 #include "bunny.h"
 #include "account.h"
 #include "plugin_annuaire.h"
-
-Q_EXPORT_PLUGIN2(plugin_annuaire, PluginAnnuaire)
 
 PluginAnnuaire::PluginAnnuaire():PluginInterface("annuaire", "Register the bunny on the central directory", SystemPlugin)
 {
@@ -16,107 +16,86 @@ PluginAnnuaire::~PluginAnnuaire() {}
 
 void PluginAnnuaire::OnBunnyConnect(Bunny * b)
 {
-	QString server = GetSettings("global/URL", "").toString();
-	if(server != "") {
-		QHttp *http = new QHttp(server,80);
+	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+	QString url = GetSettings("global/URL", "").toString();
+
+	if(url != "") {
 		QString api = b->GetGlobalSetting("VApiEnable", false).toBool() ? "1" : "0";
 		QString pub = b->GetGlobalSetting("VApiPublic", false).toBool() ? "1" : "0";
-		http->get("/nabconnection.php?m=" + b->GetID() + "&n="+ b->GetBunnyName() + "&s=" + GlobalSettings::GetString("OpenJabNabServers/PingServer") + "&ip=" + b->GetGlobalSetting("LastIP", QString("")).toString() + "&api=" + api + "&public=" + pub);
+
+	        connect(manager, SIGNAL(finished(QNetworkReply*)),this, SLOT(quit()));
+
+		url += "/nabconnection.php?m="+ b->GetID();
+		url += "&n=" + b->GetBunnyName();
+		url += "&s=" + GlobalSettings::GetString("OpenJabNabServers/PingServer");
+		url += "&ip=" + b->GetGlobalSetting("LastIP", QString("")).toString();
+		url += "&api=" + api;
+		url += "&public=" + pub;
+        	manager->get(QNetworkRequest(url));
 	}
+}
+
+QList<BunnyInfos> PluginAnnuaire::SearchBunny(QString endurl)
+{
+	QEventLoop loop;
+	QNetworkReply *reply;
+	QNetworkRequest req;
+	QString url;
+	QXmlStreamReader xml;
+	QString currentTag;
+	BunnyInfos currentBunny;
+	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+
+	QObject::connect(manager, SIGNAL(finished( QNetworkReply* )), &loop, SLOT(quit()));
+	url = GetSettings("global/URL", "").toString() + endurl;
+	req.setUrl(QUrl(url));
+	loop.exec();
+	reply = manager->get(req);
+	reply->deleteLater();
+
+	xml.clear();
+	xml.addData(reply->readAll());
+	QList<BunnyInfos> whois = QList<BunnyInfos>();
+
+	while (!xml.atEnd())
+	{
+		xml.readNext();
+		if (xml.isStartElement() || xml.isEndElement())
+		{
+			currentTag = xml.name().toString();
+		}
+		else if (xml.isCharacters() && !xml.isWhitespace())
+		{
+			if(currentTag == "name")
+			{
+				currentBunny.name = xml.text().toString();
+			}
+			else if(currentTag == "macaddress")
+			{
+				currentBunny.ID = xml.text().toString().toLatin1();
+			}
+			else if(currentTag == "server")
+			{
+				currentBunny.server = xml.text().toString();
+			}
+		}
+		if(xml.isEndElement() && currentTag == "bunny")
+		{
+			whois.append(currentBunny);
+		}
+	}
+
+	return whois;
 }
 
 QList<BunnyInfos> PluginAnnuaire::SearchBunnyByName(QString name)
 {
-	QEventLoop loop;
-
-	QHttp *http = new QHttp(GetSettings("global/URL", "").toString(), 80);
-	http->get("/whois.php?n=" + QUrl::toPercentEncoding(name));
-	QObject::connect(http, SIGNAL(done(bool)), &loop, SLOT(quit()));
-	loop.exec();
-
-	QXmlStreamReader xml;
-	xml.clear();
-	xml.addData(http->readAll());
-
-	QString currentTag;
-	QList<BunnyInfos> whois = QList<BunnyInfos>();
-	BunnyInfos currentBunny;
-	while (!xml.atEnd())
-	{
-		xml.readNext();
-		if (xml.isStartElement() || xml.isEndElement())
-		{
-			currentTag = xml.name().toString();
-		}
-		else if (xml.isCharacters() && !xml.isWhitespace())
-		{
-			if(currentTag == "name")
-			{
-				currentBunny.name = xml.text().toString();
-			}
-			else if(currentTag == "macaddress")
-			{
-				currentBunny.ID = xml.text().toString().toAscii();
-			}
-			else if(currentTag == "server")
-			{
-				currentBunny.server = xml.text().toString();
-			}
-		}
-		if(xml.isEndElement() && currentTag == "bunny")
-		{
-			whois.append(currentBunny);
-		}
-	}
-
-	return whois;
+	return SearchBunny("/whois.php?n=" + QUrl::toPercentEncoding(name));
 }
 
 QList<BunnyInfos> PluginAnnuaire::SearchBunnyByMac(QByteArray ID)
 {
-	QEventLoop loop;
-
-	QHttp *http = new QHttp(GetSettings("global/URL", "").toString(), 80);
-	http->get("/whois.php?nm" + QUrl::toPercentEncoding(QString(ID)));
-	QObject::connect(http, SIGNAL(done(bool)), &loop, SLOT(quit()));
-	loop.exec();
-
-	QXmlStreamReader xml;
-	xml.clear();
-	xml.addData(http->readAll());
-
-	QString currentTag;
-	QList<BunnyInfos> whois = QList<BunnyInfos>();
-	BunnyInfos currentBunny;
-	while (!xml.atEnd())
-	{
-		xml.readNext();
-		if (xml.isStartElement() || xml.isEndElement())
-		{
-			currentTag = xml.name().toString();
-		}
-		else if (xml.isCharacters() && !xml.isWhitespace())
-		{
-			if(currentTag == "name")
-			{
-				currentBunny.name = xml.text().toString();
-			}
-			else if(currentTag == "macaddress")
-			{
-				currentBunny.ID = xml.text().toString().toAscii();
-			}
-			else if(currentTag == "server")
-			{
-				currentBunny.server = xml.text().toString();
-			}
-		}
-		if(xml.isEndElement() && currentTag == "bunny")
-		{
-			whois.append(currentBunny);
-		}
-	}
-
-	return whois;
+	return SearchBunny("/whois.php?nm" + QUrl::toPercentEncoding(QString(ID)));
 }
 /*******/
 /* API */
@@ -155,7 +134,7 @@ PLUGIN_API_CALL(PluginAnnuaire::Api_SearchBunnyByMac)
 {
 	Q_UNUSED(account);
 
-	QList<BunnyInfos> whois = SearchBunnyByMac(hRequest.GetArg("mac").toAscii());
+	QList<BunnyInfos> whois = SearchBunnyByMac(hRequest.GetArg("mac").toLatin1());
 	QString xml = "";
 	foreach(BunnyInfos b, whois)
 	{
@@ -188,10 +167,10 @@ PLUGIN_API_CALL(PluginAnnuaire::Api_SearchBunnyByName)
 PLUGIN_API_CALL(PluginAnnuaire::Api_VerifyMacToken)
 {
 	Q_UNUSED(account);
-	Bunny * b = BunnyManager::GetBunny(hRequest.GetArg("mac").toAscii());
+	Bunny * b = BunnyManager::GetBunny(hRequest.GetArg("mac").toLatin1());
 	QString xml = "";
 		
-	if (hRequest.GetArg("reqtoken").toAscii()==b->GetGlobalSetting("VApiToken","FAILED").toString() ) 
+	if (hRequest.GetArg("reqtoken").toLatin1()==b->GetGlobalSetting("VApiToken","FAILED").toString() ) 
 		xml += "<verify>true</verify>\n";
 	else 
 		xml += "<verify>false</verify>\n";

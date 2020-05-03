@@ -19,8 +19,6 @@
 #include "ttsmanager.h"
 
 
-Q_EXPORT_PLUGIN2(plugin_ratp, PluginRatp)
-
 PluginRatp::PluginRatp():PluginInterface("ratp", "RATP : Prochains passages")
 {
 }

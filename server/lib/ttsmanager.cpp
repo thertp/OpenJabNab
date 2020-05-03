@@ -2,8 +2,6 @@
 #include <QDataStream>
 #include <QEventLoop>
 #include <QFile>
-#include <QHttp>
-#include <QHttpRequestHeader>
 #include <QObject>
 #include <QPluginLoader>
 #include <QStringList>
@@ -47,7 +45,7 @@ void TTSManager::LoadTTSs()
 {
 	LogInfo(QString("Finding tts in : %1").arg(ttsDir.path()));
 	foreach (QFileInfo file, ttsDir.entryInfoList(QDir::Files))
-		LoadTTS(file.fileName().toAscii());
+		LoadTTS(file.fileName().toLatin1());
 }
 
 bool TTSManager::LoadTTS(QString const& fileName)

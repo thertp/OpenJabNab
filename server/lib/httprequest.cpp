@@ -1,9 +1,12 @@
 #include <QEventLoop>
+#if 0
 #include <QHttp>
 #include <QHttpRequestHeader>
+#endif
 #include <QObject>
 #include <QStringList>
 #include <QUrl>
+#include <QUrlQuery>
 #include "httprequest.h"
 #include "log.h"
 
@@ -59,13 +62,14 @@ HTTPRequest::HTTPRequest(QByteArray const& data):type(INVALID)
 	uri = url.path();
 	if(url.hasQuery())
 	{
-		QList<QPair<QString, QString> > items = url.queryItems();
+		QUrlQuery query = QUrlQuery(url);
+		QList<QPair<QString, QString> > items = query.queryItems();
 		typedef QPair<QString, QString> queryItemDef;
 		foreach(queryItemDef item, items)
-			getData[QUrl::fromPercentEncoding(item.first.toAscii())] = QUrl::fromPercentEncoding(item.second.toAscii());
+			getData[QUrl::fromPercentEncoding(item.first.toLatin1())] = QUrl::fromPercentEncoding(item.second.toLatin1());
 	}
 }
-
+#if 0
 QByteArray HTTPRequest::ForwardTo(QString const& server)
 {
 	QByteArray answer;
@@ -111,7 +115,7 @@ QByteArray HTTPRequest::ForwardTo(QString const& server)
 	http.close();
 	return answer;
 }
-
+#endif
 QString HTTPRequest::toString() const
 {
 	QString s;

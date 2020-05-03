@@ -7,8 +7,6 @@
 #include "bunnymanager.h"
 #include "messagepacket.h"
 
-Q_EXPORT_PLUGIN2(plugin_webradio, PluginWebradio)
-
 PluginWebradio::PluginWebradio():PluginInterface("webradio", "WebRadio", BunnyZtampPlugin)
 {
 	presets.clear();
@@ -123,7 +121,7 @@ void PluginWebradio::OnBunnyDisconnect(Bunny * b)
 
 bool PluginWebradio::streamWebradio(Bunny * b, QString url)
 {
-	QByteArray message = "ST "+url.toAscii()+"\nPL "+QString::number(qrand() % 8).toAscii()+"\nMW\n";
+	QByteArray message = "ST "+url.toLatin1()+"\nPL "+QString::number(qrand() % 8).toLatin1()+"\nMW\n";
 	b->SendPacket(MessagePacket(message));
 	return true;
 }

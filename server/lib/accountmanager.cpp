@@ -53,7 +53,7 @@ void AccountManager::LoadAccounts()
 	foreach (QFileInfo ffile, accountsDir.entryInfoList(QDir::Files))
 	{
 		/* Open File */
-		QByteArray configFileName = accountsDir.absoluteFilePath(ffile.fileName().toAscii()).toAscii();
+		QByteArray configFileName = accountsDir.absoluteFilePath(ffile.fileName().toLatin1()).toLatin1();
 		QFile file(configFileName);
 		if (!file.open(QIODevice::ReadOnly))
 		{
@@ -182,7 +182,7 @@ QByteArray AccountManager::GetToken(QString const& login, QByteArray const& hash
 		if((*it)->GetPasswordHash() == hash)
 		{
 			// Generate random token
-			QByteArray token = QCryptographicHash::hash(QUuid::createUuid().toString().toAscii(), QCryptographicHash::Md5).toHex();
+			QByteArray token = QCryptographicHash::hash(QUuid::createUuid().toString().toLatin1(), QCryptographicHash::Md5).toHex();
 			TokenData t;
 			t.account = *it;
 			t.expire_time = QDateTime::currentDateTime().toTime_t() + GlobalSettings::GetInt("Config/SessionTimeout", 300);
@@ -223,8 +223,7 @@ void AccountManager::InitApiCalls()
 API_CALL(AccountManager::Api_Auth)
 {
 	Q_UNUSED(account);
-
-	QByteArray retour = GetToken(hRequest.GetArg("login"), QCryptographicHash::hash(hRequest.GetArg("pass").toAscii(), QCryptographicHash::Md5));
+	QByteArray retour = GetToken(hRequest.GetArg("login"), QCryptographicHash::hash(hRequest.GetArg("pass").toLatin1(), QCryptographicHash::Md5));
 	if(retour == QByteArray())
 		return new ApiManager::ApiError("Access denied");
 
@@ -240,11 +239,11 @@ API_CALL(AccountManager::Api_ChangePasswd)
 	if(login == "" || pwd == "" || (!account.IsAdmin() && login != account.GetLogin()))
 		return new ApiManager::ApiError("Access denied");
 
-	Account *ac = listOfAccountsByName.value(login.toAscii());
+	Account *ac = listOfAccountsByName.value(login.toLatin1());
 	if(ac == NULL)
 		return new ApiManager::ApiError("Login not found.");
 
-	ac->SetPassword(QCryptographicHash::hash(pwd.toAscii(), QCryptographicHash::Md5));
+	ac->SetPassword(QCryptographicHash::hash(pwd.toLatin1(), QCryptographicHash::Md5));
 	LogInfo(QString("Password changed for user '%1'").arg(login));
 	SaveAccounts();
 	return new ApiManager::ApiOk("Password changed");
@@ -259,7 +258,7 @@ API_CALL(AccountManager::Api_RegisterNewAccount)
 	if(listOfAccountsByName.contains(login))
 		return new ApiManager::ApiError(QString("Account '%1' already exists").arg(hRequest.GetArg("login")));
 
-	Account * a = new Account(login, hRequest.GetArg("username"), QCryptographicHash::hash(hRequest.GetArg("pass").toAscii(), QCryptographicHash::Md5));
+	Account * a = new Account(login, hRequest.GetArg("username"), QCryptographicHash::hash(hRequest.GetArg("pass").toLatin1(), QCryptographicHash::Md5));
 	listOfAccounts.append(a);
 	listOfAccountsByName.insert(a->GetLogin(), a);
 	if(listOfAccounts.count() == 2 && listOfAccountsByName.contains("admin")) {
@@ -280,7 +279,7 @@ API_CALL(AccountManager::Api_RemoveAccount)
 	if(!listOfAccountsByName.contains(login))
 		return new ApiManager::ApiError(QString("Account '%1' does not exist").arg(login));
 
-	Account * a = GetAccountByLogin(login.toAscii());
+	Account * a = GetAccountByLogin(login.toLatin1());
 	int indexOfAccount = listOfAccounts.indexOf(a);
 	listOfAccounts.removeAt(indexOfAccount);
 	listOfAccountsByName.remove(a->GetLogin());
@@ -305,13 +304,13 @@ API_CALL(AccountManager::Api_AddBunny)
 	QString bunnyid = hRequest.GetArg("bunnyid");
 
 	// Lock bunny to this account
-	Bunny *b = BunnyManager::GetBunny(bunnyid.toAscii());
+	Bunny *b = BunnyManager::GetBunny(bunnyid.toLatin1());
 	QString own = b->GetGlobalSetting("OwnerAccount","").toString();
 	if(own != "" && own != login)
 		return new ApiManager::ApiError(QString("Bunny %1 is already attached to this account: '%2'").arg(bunnyid,own));
 
 	b->SetGlobalSetting("OwnerAccount", login);
-	QByteArray id = listOfAccountsByName.value(login)->AddBunny(bunnyid.toAscii());
+	QByteArray id = listOfAccountsByName.value(login)->AddBunny(bunnyid.toLatin1());
 	SaveAccounts();
 	return new ApiManager::ApiOk(QString("Bunny '%1' added to account '%2'").arg(QString(id)).arg(login));
 }
@@ -328,8 +327,8 @@ API_CALL(AccountManager::Api_RemoveBunny)
 			return new ApiManager::ApiError(QString("Access denied to user '%1'").arg(login));
 
 	QString bunnyID = hRequest.GetArg("bunnyid");
-	if(listOfAccountsByName.value(login)->RemoveBunny(bunnyID.toAscii())) {
-		Bunny *b = BunnyManager::GetBunny(bunnyID.toAscii());
+	if(listOfAccountsByName.value(login)->RemoveBunny(bunnyID.toLatin1())) {
+		Bunny *b = BunnyManager::GetBunny(bunnyID.toLatin1());
 		b->RemoveGlobalSetting("OwnerAccount");
 		SaveAccounts();
 		return new ApiManager::ApiOk(QString("Bunny '%1' removed from account '%2'").arg(bunnyID).arg(login));
@@ -349,8 +348,8 @@ API_CALL(AccountManager::Api_RemoveZtamp)
 			return new ApiManager::ApiError(QString("Access denied to user '%1'").arg(login));
 
 	QString zID = hRequest.GetArg("zid");
-	if(listOfAccountsByName.value(login)->RemoveZtamp(zID.toAscii())) {
-		Ztamp *z = ZtampManager::GetZtamp(zID.toAscii());
+	if(listOfAccountsByName.value(login)->RemoveZtamp(zID.toLatin1())) {
+		Ztamp *z = ZtampManager::GetZtamp(zID.toLatin1());
 		z->RemoveGlobalSetting("OwnerAccount");
 		SaveAccounts();
 		return new ApiManager::ApiOk(QString("Ztamp '%1' removed from account '%2'").arg(zID).arg(login));
@@ -363,7 +362,7 @@ API_CALL(AccountManager::Api_SetToken)
 	QHash<QString, Account *>::iterator it = listOfAccountsByName.find(account.GetLogin());
 	if(it != listOfAccountsByName.end())
 	{
-		it.value()->SetToken(hRequest.GetArg("tk").toAscii());
+		it.value()->SetToken(hRequest.GetArg("tk").toLatin1());
 		//SaveAccounts();
 		return new ApiManager::ApiString("Token changed");
 	}
@@ -378,7 +377,7 @@ API_CALL(AccountManager::Api_GetUserInfos)
 	if(login == "" || (!account.IsAdmin() && login != account.GetLogin()))
 		return new ApiManager::ApiError("Access denied");
 
-	Account *ac = listOfAccountsByName.value(login.toAscii());
+	Account *ac = listOfAccountsByName.value(login.toLatin1());
 	if(ac == NULL)
 		return new ApiManager::ApiError("Login not found.");
 
@@ -439,7 +438,7 @@ API_CALL(AccountManager::Api_SetAdmin)
 		return new ApiManager::ApiError("Access denied");
 
 	/* Get User */
-	Account *ac = listOfAccountsByName.value(login.toAscii());
+	Account *ac = listOfAccountsByName.value(login.toLatin1());
 	if(ac == NULL)
 		return new ApiManager::ApiError("Login not found.");
 	ac->setAdmin();
@@ -457,7 +456,7 @@ API_CALL(AccountManager::Api_SetLanguage)
 		return new ApiManager::ApiError("No account specified");
 
 	/* Get User */
-	Account *ac = listOfAccountsByName.value(login.toAscii());
+	Account *ac = listOfAccountsByName.value(login.toLatin1());
 	if(ac == NULL)
 		return new ApiManager::ApiError("Account not found.");
 	ac->SetLanguage(language);
@@ -474,7 +473,7 @@ API_CALL(AccountManager::Api_GetLanguage)
 		return new ApiManager::ApiError("No account specified");
 
 	/* Get User */
-	Account *ac = listOfAccountsByName.value(login.toAscii());
+	Account *ac = listOfAccountsByName.value(login.toLatin1());
 	if(ac == NULL)
 		return new ApiManager::ApiError("Account not found.");
 	return new ApiManager::ApiString(ac->GetLanguage());

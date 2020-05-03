@@ -2,6 +2,7 @@
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
+#include <QDataStream>
 #include "ambientpacket.h"
 #include "ztamp.h"
 #include "bunny.h"

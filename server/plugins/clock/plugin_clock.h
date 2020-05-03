@@ -1,7 +1,6 @@
 #ifndef _PLUGINCLOCK_H_
 #define _PLUGINCLOCK_H_
 
-#include <QHttp>
 #include <QMultiMap>
 #include <QTextStream>
 #include <QThread>
@@ -10,6 +9,7 @@
 class PluginClock : public PluginInterface
 {
 	Q_OBJECT
+	Q_PLUGIN_METADATA(IID OPENJABNAB_PLUGIN_IFACE_VERSION_STRING)
 	Q_INTERFACES(PluginInterface)
 	
 public:

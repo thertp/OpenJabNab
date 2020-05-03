@@ -4,6 +4,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QUrlQuery>
 #include <QMapIterator>
 #include <QRegExp>
 #include <memory>
@@ -16,8 +17,6 @@
 #include "plugin_weather.h"
 #include "settings.h"
 #include "ttsmanager.h"
-
-Q_EXPORT_PLUGIN2(plugin_weather, PluginWeather)
 
 PluginWeather::PluginWeather():PluginInterface("weather", "Weather", BunnyZtampPlugin)
 {
@@ -68,9 +67,10 @@ void PluginWeather::getWeatherPage(Bunny * b, QString ville)
 {
 	Q_UNUSED(b);
 	QString api_token =  b->GetPluginSetting(GetName(), "PreviToken", QString()).toString();
-	QUrl url("http://api.previmeteo.com/" + api_token + "/ig/api");
-	url.addEncodedQueryItem("hl", b->GetPluginSetting(GetName(), "Lang","fr").toByteArray());
-	url.addEncodedQueryItem("weather", QUrl::toPercentEncoding(ville));
+	QUrl url = QUrl("http://api.previmeteo.com/" + api_token + "/ig/api");
+	QUrlQuery query(url);
+	query.addQueryItem("hl", QUrl::toPercentEncoding(b->GetPluginSetting(GetName(), "Lang","fr").toByteArray()));
+	query.addQueryItem("weather", QUrl::toPercentEncoding(ville));
 	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
 	manager->setProperty("BunnyID", b->GetID());
 	connect(manager, SIGNAL(finished(QNetworkReply*)),this, SLOT(analyseXml(QNetworkReply*)));

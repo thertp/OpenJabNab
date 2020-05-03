@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include "plugininterface.h"
 
+#define OPENJABNAB_PLUGINAUTH_IFACE_VERSION_STRING	"org.toms.openjabnab.PluginAuthInterface/1.0"
 class Bunny;
 class XmppHandler;
 class PluginAuthInterface : public PluginInterface
@@ -40,6 +41,6 @@ inline bool PluginAuthInterface::DoAuth(XmppHandler *, QByteArray const&, Bunny 
 	return false;
 }
 
-Q_DECLARE_INTERFACE(PluginAuthInterface,"org.toms.openjabnab.PluginAuthInterface/1.0")
+Q_DECLARE_INTERFACE(PluginAuthInterface,OPENJABNAB_PLUGINAUTH_IFACE_VERSION_STRING)
 
 #endif

@@ -4,8 +4,6 @@
 #include "cron.h"
 #include "messagepacket.h"
 
-Q_EXPORT_PLUGIN2(plugin_surprise, PluginSurprise)
-
 // +/- 20% - 30min => rand(24,36)
 #define RANDOMIZEDRATIO 20
 

@@ -1,7 +1,6 @@
 #include <QDateTime>
 #include <QCryptographicHash>
 #include <QXmlStreamReader>
-#include <QHttp>
 #include <QMapIterator>
 #include <QRegExp>
 #include <QUrl>
@@ -17,8 +16,6 @@
 #include "plugin_jokes.h"
 #include "settings.h"
 #include "ttsmanager.h"
-
-Q_EXPORT_PLUGIN2(plugin_blague, PluginJokes)
 
 // +/- 20% - 30min => rand(24,36)
 #define RANDOMIZEDRATIO 20

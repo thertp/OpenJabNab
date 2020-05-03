@@ -3,8 +3,6 @@
 #include "bunnymanager.h"
 #include "log.h"
 
-Q_EXPORT_PLUGIN2(plugin_stats, PluginStats)
-
 PluginStats::PluginStats():PluginInterface("stats", "stats plugin", SystemPlugin)
 {
 }

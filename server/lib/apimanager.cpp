@@ -37,7 +37,7 @@ ApiManager::ApiAnswer * ApiManager::ProcessApiCall(QString const& request, HTTPR
 	}
 	else
 	{
-		Account const& account = hRequest.HasArg("token")?AccountManager::Instance().GetAccount(hRequest.GetArg("token").toAscii()):AccountManager::Guest();
+		Account const& account = hRequest.HasArg("token")?AccountManager::Instance().GetAccount(hRequest.GetArg("token").toLatin1()):AccountManager::Guest();
 		hRequest.RemoveArg("token");
 
 		if(request.startsWith("global/"))
@@ -133,7 +133,7 @@ ApiManager::ApiAnswer * ApiManager::ProcessBunnyApiCall(Account const& account, 
 	if(list.size() < 2)
 		return new ApiManager::ApiError(QString("Malformed Bunny Api Call : %1").arg(hRequest.toString()));
 
-	QByteArray const& bunnyID = list.at(0).toAscii();
+	QByteArray const& bunnyID = list.at(0).toLatin1();
 
 	if(!account.HasBunnyAccess(bunnyID))
 		return new ApiManager::ApiError("Access denied to this bunny");
@@ -142,18 +142,18 @@ ApiManager::ApiAnswer * ApiManager::ProcessBunnyApiCall(Account const& account, 
 
 	if(list.size() == 2)
 	{
-		QByteArray const& functionName = list.at(1).toAscii();
+		QByteArray const& functionName = list.at(1).toLatin1();
 		return b->ProcessApiCall(account, functionName, hRequest);
 	}
 	else if(list.size() == 3)
 	{
-			PluginInterface * plugin = PluginManager::Instance().GetPluginByName(list.at(1).toAscii());
+			PluginInterface * plugin = PluginManager::Instance().GetPluginByName(list.at(1).toLatin1());
 			if(!plugin)
 				return new ApiManager::ApiError(QString("Unknown Plugin : '%1'").arg(list.at(1)));
 
 			if(b->HasPlugin(plugin) || ( (plugin->GetType() == PluginInterface::SystemPlugin || plugin->GetType() == PluginInterface::RequiredPlugin ) && plugin->GetEnable()))
 			{
-				QByteArray const& functionName = list.at(2).toAscii();
+				QByteArray const& functionName = list.at(2).toLatin1();
 				return plugin->ProcessBunnyApiCall(b, account, functionName, hRequest);
 			}
 		else
@@ -172,7 +172,7 @@ ApiManager::ApiAnswer * ApiManager::ProcessBunnyVioletApiCall(QString const& req
 
 	QString serial = hRequest.GetArg("sn");
 
-	Bunny * b = BunnyManager::GetBunny(serial.toAscii());
+	Bunny * b = BunnyManager::GetBunny(serial.toLatin1());
 
 	if(list.size() == 3)
 	{
@@ -189,7 +189,7 @@ ApiManager::ApiAnswer * ApiManager::ProcessZtampApiCall(Account const& account, 
 	if(list.size() < 2)
 		return new ApiManager::ApiError(QString("Malformed Ztamp Api Call : %1").arg(hRequest.toString()));
 
-	QByteArray const& ztampID = list.at(0).toAscii();
+	QByteArray const& ztampID = list.at(0).toLatin1();
 
 	if(!account.HasZtampAccess(ztampID))
 		return new ApiManager::ApiError("Access denied to this ztamp");
@@ -198,18 +198,18 @@ ApiManager::ApiAnswer * ApiManager::ProcessZtampApiCall(Account const& account, 
 
 	if(list.size() == 2)
 	{
-		QByteArray const& functionName = list.at(1).toAscii();
+		QByteArray const& functionName = list.at(1).toLatin1();
 		return z->ProcessApiCall(account, functionName, hRequest);
 	}
 	else if(list.size() == 3)
 	{
-			PluginInterface * plugin = PluginManager::Instance().GetPluginByName(list.at(1).toAscii());
+			PluginInterface * plugin = PluginManager::Instance().GetPluginByName(list.at(1).toLatin1());
 			if(!plugin)
 				return new ApiManager::ApiError(QString("Unknown Plugin : '%1'").arg(list.at(1)));
 
 			if(z->HasPlugin(plugin))
 			{
-				QByteArray const& functionName = list.at(2).toAscii();
+				QByteArray const& functionName = list.at(2).toLatin1();
 				return plugin->ProcessZtampApiCall(z, account, functionName, hRequest);
 			}
 		else

@@ -7,8 +7,6 @@
 #include "plugin_clock.h"
 #include "ttsmanager.h"
 
-Q_EXPORT_PLUGIN2(plugin_clock, PluginClock)
-
 PluginClock::PluginClock():PluginInterface("clock", "Clock",BunnyPlugin)
 {
 	Cron::Register(this, 60, 0, 0, NULL);

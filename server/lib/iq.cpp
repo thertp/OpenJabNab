@@ -35,9 +35,9 @@ IQ::IQ(QByteArray const& data)
 	if(rx.indexIn(data) != -1)
 	{
 		isValid = true;
-		content = rx.cap(2).toAscii();
+		content = rx.cap(2).toLatin1();
 		// Now split args
-		QList<QByteArray> args = rx.cap(1).toAscii().split(' ');
+		QList<QByteArray> args = rx.cap(1).toLatin1().split(' ');
 		foreach(QByteArray arg, args)
 		{
 			int i = arg.indexOf('=');
@@ -75,7 +75,7 @@ QByteArray IQ::Reply(Iq_Types newType, QByteArray const& format, QByteArray cons
 	QString sfrom = "from='" + to + "'";
 	QString sto = "to='" + from + "'";
 
-	QByteArray reply = QString("<iq ").append(QString(format).replace("%1", sid).replace("%2", sfrom).replace("%3", sto).replace("%4", stype)).toAscii();
+	QByteArray reply = QString("<iq ").append(QString(format).replace("%1", sid).replace("%2", sfrom).replace("%3", sto).replace("%4", stype)).toLatin1();
 
 	if(content.isNull())
 	{

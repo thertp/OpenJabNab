@@ -3,7 +3,6 @@
 #include "bunnymanager.h"
 #include "ambientpacket.h"
 #include "messagepacket.h"
-Q_EXPORT_PLUGIN2(plugin_ears, PluginEars)
 
 PluginEars::PluginEars():PluginInterface("ears", "Ears Pairing with another Bunny",BunnyPlugin) { }
 

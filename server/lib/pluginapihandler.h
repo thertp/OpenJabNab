@@ -94,6 +94,7 @@ public:
 		// Check args
 		foreach(QString arg, it->second)
 		{
+
 			if(!hRequest.HasArg(arg))
 			{
 				return new ApiManager::ApiError(QString("Argument '%1' is missing").arg(arg));

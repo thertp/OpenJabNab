@@ -61,14 +61,14 @@ ApiManager::ApiAnswer * Bunny::ProcessVioletApiCall(HTTPRequest const& hRequest)
 	  	QString token = hRequest.GetArg("token");
 
 		if(GetGlobalSetting("VApiEnable",false).toBool()) {
-			if((GetGlobalSetting("VApiToken","").toString() == token && serial.toAscii()==GetID()) || GetGlobalSetting("VApiPublic",false).toBool())
+			if((GetGlobalSetting("VApiToken","").toString() == token && serial.toLatin1()==GetID()) || GetGlobalSetting("VApiPublic",false).toBool())
        			{
 
 	        	        if(hRequest.GetURI().startsWith("/ojn/FR/api_stream.jsp"))
 		                {
         		                if(hRequest.HasArg("urlList"))
 	                	        {
-						QByteArray message = ("ST " + hRequest.GetArg("urlList").split("|", QString::SkipEmptyParts).join("\nMW\nST ") + "\nMW\n").toAscii();
+						QByteArray message = ("ST " + hRequest.GetArg("urlList").split("|", QString::SkipEmptyParts).join("\nMW\nST ") + "\nMW\n").toLatin1();
 						SendPacket(MessagePacket(message));
 	                	                answer->AddMessage("WEBRADIOSENT", "Your webradio has been sent");
         		                }
@@ -193,7 +193,7 @@ ApiManager::ApiAnswer * Bunny::ProcessVioletApiCall(HTTPRequest const& hRequest)
 								{
 									file.write(c.GetData());
 									file.close();
-									SendPacket(MessagePacket(("CH broadcast/ojn_local/chor/" + fileName + "\n").toAscii()));
+									SendPacket(MessagePacket(("CH broadcast/ojn_local/chor/" + fileName + "\n").toLatin1()));
 									answer->AddMessage("CHORSENT", "Your chor has been sent");
 								}
 		                                        }
@@ -815,7 +815,7 @@ API_CALL(Bunny::Api_SetRFIDTagName)
 {
 	Q_UNUSED(account);
 
-	QByteArray tagName = hRequest.GetArg("tag").toAscii();
+	QByteArray tagName = hRequest.GetArg("tag").toLatin1();
 	if(!knownRFIDTags.contains(tagName))
 		return new ApiManager::ApiError(QString("Tag '%1' is unkown").arg(hRequest.GetArg("tag")));
 
@@ -920,7 +920,7 @@ API_CALL(Bunny::Api_enableVApi)
 	QString Token = GetGlobalSetting("VApiToken", "").toString();
 	if(Token == "") {
 		/* Generate random token */
-		QByteArray Token = QCryptographicHash::hash(QUuid::createUuid().toString().toAscii(), QCryptographicHash::Md5).toHex();
+		QByteArray Token = QCryptographicHash::hash(QUuid::createUuid().toString().toLatin1(), QCryptographicHash::Md5).toHex();
 		SetGlobalSetting("VApiToken",Token);
 	}
 	SetGlobalSetting("VApiEnable",true);
@@ -954,7 +954,7 @@ API_CALL(Bunny::Api_setVApiToken)
 	if(!account.IsAdmin())
 		return new ApiManager::ApiError("Access denied");
 
-	SetGlobalSetting("VApiToken",hRequest.GetArg("tk").toAscii());
+	SetGlobalSetting("VApiToken",hRequest.GetArg("tk").toLatin1());
 	return new ApiManager::ApiOk(QString("VioletAPI Token updated."));
 }
 

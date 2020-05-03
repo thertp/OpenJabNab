@@ -12,8 +12,6 @@
 #include "plugininterface.h"
 
 
-Q_EXPORT_PLUGIN2(plugin_callurl, PluginCallURL)
-
 PluginCallURL::PluginCallURL():PluginInterface("callurl", "Plugin to call an URL")
 {
 }
@@ -25,7 +23,7 @@ PluginCallURL::~PluginCallURL()
 
 void PluginCallURL::CallURL(Bunny * b, QString url)
 {
-	QByteArray message = "CU " + url.toAscii() + "\n";
+	QByteArray message = "CU " + url.toLatin1() + "\n";
 	b->SendPacket(MessagePacket(message));
 }
 

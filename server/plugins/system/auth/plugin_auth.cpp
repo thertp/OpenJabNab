@@ -9,8 +9,6 @@
 #include "settings.h"
 #include "xmpphandler.h"
 
-Q_EXPORT_PLUGIN2(plugin_auth, PluginAuth)
-
 PluginAuth::PluginAuth():PluginAuthInterface("auth", "Manage Authentication process")
 {
 }
@@ -88,13 +86,13 @@ bool PluginAuth::DoAuth(XmppHandler * xmpp, QByteArray const& data, Bunny ** pBu
 				QRegExp rx("<response[^>]*>(.*)</response>");
 				if (rx.indexIn(data) != -1)
 				{
-					QByteArray authString = QByteArray::fromBase64(rx.cap(1).toAscii()).replace((char)0, "");
+					QByteArray authString = QByteArray::fromBase64(rx.cap(1).toLatin1()).replace((char)0, "");
 					// authString is like : username="",nonce="",cnonce="",nc=,qop=auth,digest-uri="",response=,charset=utf-8
 					// Parse values
 					rx.setPattern("username=\"([^\"]*)\",nonce=\"([^\"]*)\",cnonce=\"([^\"]*)\",nc=([^,]*),qop=auth,digest-uri=\"([^\"]*)\",response=([^,]*),charset=utf-8");
 					if(rx.indexIn(authString) != -1)
 					{
-						QByteArray const username = rx.cap(1).toAscii();
+						QByteArray const username = rx.cap(1).toLatin1();
 						Bunny * bunny = BunnyManager::GetBunny(username);
 
 						// Check if we want to bypass auth
@@ -113,11 +111,11 @@ bool PluginAuth::DoAuth(XmppHandler * xmpp, QByteArray const& data, Bunny ** pBu
 
 
 						QByteArray const password = bunny->GetBunnyPassword();
-						QByteArray const nonce = rx.cap(2).toAscii();
-						QByteArray const cnonce = rx.cap(3).toAscii().append((char)0); // cnonce have a dummy \0 at his end :(
-						QByteArray const nc = rx.cap(4).toAscii();
-						QByteArray const digest_uri = rx.cap(5).toAscii();
-						QByteArray const bunnyResponse = rx.cap(6).toAscii();
+						QByteArray const nonce = rx.cap(2).toLatin1();
+						QByteArray const cnonce = rx.cap(3).toLatin1().append((char)0); // cnonce have a dummy \0 at his end :(
+						QByteArray const nc = rx.cap(4).toLatin1();
+						QByteArray const digest_uri = rx.cap(5).toLatin1();
+						QByteArray const bunnyResponse = rx.cap(6).toLatin1();
 						if(bunnyResponse == ComputeResponse(username, password, nonce, cnonce, nc, digest_uri, "AUTHENTICATE"))
 						{
 							// Send challenge back
@@ -183,8 +181,8 @@ bool PluginAuth::DoAuth(XmppHandler * xmpp, QByteArray const& data, Bunny ** pBu
 					QRegExp rx("<query xmlns=\"violet:iq:register\"><username>([0-9a-f]*)</username><password>([0-9a-f]*)</password></query>");
 					if(rx.indexIn(content) != -1)
 					{
-						QByteArray user = rx.cap(1).toAscii();
-						QByteArray password = rx.cap(2).toAscii();
+						QByteArray user = rx.cap(1).toLatin1();
+						QByteArray password = rx.cap(2).toLatin1();
 						Bunny * bunny = BunnyManager::GetBunny(user);
 						if(bunny->SetBunnyPassword(ComputeXor(user,password)))
 						{
@@ -212,7 +210,7 @@ bool PluginAuth::HttpRequestHandle(HTTPRequest & request)
 	if (uri.startsWith("/vl/sendMailXMPP.jsp"))
 	{
 		QString mac = request.GetArg("m");
-		Bunny * b = BunnyManager::GetBunny(this, mac.toAscii());
+		Bunny * b = BunnyManager::GetBunny(this, mac.toLatin1());
 		b->ClearBunnyPassword();
 		LogError("Bunny just call sendMailXMPP, password reset");
 		return true;

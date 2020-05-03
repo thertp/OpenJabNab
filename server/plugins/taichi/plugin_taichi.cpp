@@ -2,8 +2,6 @@
 #include "ambientpacket.h"
 #include "bunny.h"
 
-Q_EXPORT_PLUGIN2(plugin_taichi, PluginTaichi)
-
 PluginTaichi::PluginTaichi():PluginInterface("taichi", "Manage Bunny's Taichi",BunnyPlugin)
 {
 }

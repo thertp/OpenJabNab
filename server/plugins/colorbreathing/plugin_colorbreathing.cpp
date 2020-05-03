@@ -7,8 +7,6 @@
 #include "log.h"
 #include "settings.h"
 
-Q_EXPORT_PLUGIN2(plugin_colorbreathing, PluginColorbreathing)
-
 PluginColorbreathing::PluginColorbreathing():PluginInterface("colorbreathing", "Change breathing color", BunnyPlugin)
 {
 	availableColors["none"]   = 0;

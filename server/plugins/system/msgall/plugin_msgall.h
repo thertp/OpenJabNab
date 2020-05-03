@@ -6,6 +6,7 @@
 class PluginMsgall : public PluginInterface
 {
 	Q_OBJECT
+	Q_PLUGIN_METADATA(IID OPENJABNAB_PLUGIN_IFACE_VERSION_STRING)
 	Q_INTERFACES(PluginInterface)
 
 public:
