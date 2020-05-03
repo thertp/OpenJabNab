@@ -120,7 +120,7 @@ Choregraphy::LedAction::LedAction(enum Led l, quint8 r, quint8 g, quint8 b):led(
 
 QByteArray Choregraphy::MotorAction::GetData()
 {
-	QByteArray(tmp);
+	QByteArray tmp;
 	tmp.append(0x08); // MotorAction
 	tmp.append(ear);
 	tmp.append(angle/18);
@@ -130,7 +130,7 @@ QByteArray Choregraphy::MotorAction::GetData()
 
 QByteArray Choregraphy::LedAction::GetData()
 {
-	QByteArray(tmp);
+	QByteArray tmp;
 	tmp.append(0x07); // LedAction
 	tmp.append(led);
 	tmp.append(red);

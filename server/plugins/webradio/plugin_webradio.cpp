@@ -250,7 +250,7 @@ PLUGIN_BUNNY_API_CALL(PluginWebradio::Api_Play)
 
     if(streamPresetWebradio(bunny, hRequest.GetArg("name")))
     	return new ApiManager::ApiOk(QString("Now streaming '%1' on bunny '%2'").arg(hRequest.GetArg("name"), QString(bunny->GetID())));
-	return new ApiManager::ApiError(QString("Can't stream '%1' on bunny '%2'").arg(hRequest.GetArg("name"), QString(bunny->GetID())));
+    return new ApiManager::ApiError(QString("Can't stream '%1' on bunny '%2'").arg(hRequest.GetArg("name"), QString(bunny->GetID())));
 }
 
 PLUGIN_BUNNY_API_CALL(PluginWebradio::Api_PlayUrl)
@@ -262,7 +262,7 @@ PLUGIN_BUNNY_API_CALL(PluginWebradio::Api_PlayUrl)
 
     if(streamWebradio(bunny, hRequest.GetArg("url")))
     	return new ApiManager::ApiOk(QString("Now streaming '%1' on bunny '%2'").arg(hRequest.GetArg("url"), QString(bunny->GetID())));
-	return new ApiManager::ApiError(QString("Can't stream '%1' on bunny '%2'").arg(hRequest.GetArg("url"), QString(bunny->GetID())));
+    return new ApiManager::ApiError(QString("Can't stream '%1' on bunny '%2'").arg(hRequest.GetArg("url"), QString(bunny->GetID())));
 }
 
 PLUGIN_BUNNY_API_CALL(PluginWebradio::Api_AddWebcast)
@@ -291,7 +291,7 @@ PLUGIN_BUNNY_API_CALL(PluginWebradio::Api_RemoveWebcast)
     if(!bunny->IsConnected())
         return new ApiManager::ApiError(QString("Bunny '%1' is not connected").arg(QString(bunny->GetID())));
 
-	QMap<QString, QVariant> list = bunny->GetPluginSetting(GetName(), "Webcasts", QMap<QString, QVariant>()).toMap();
+    QMap<QString, QVariant> list = bunny->GetPluginSetting(GetName(), "Webcasts", QMap<QString, QVariant>()).toMap();
     QString time = hRequest.GetArg("time");
     if(list.contains(time))
     {

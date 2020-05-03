@@ -186,7 +186,7 @@ PLUGIN_BUNNY_API_CALL(PluginWizzflux::Api_Play)
 
     if(streamFlux(bunny, hRequest.GetArg("name")))
     	return new ApiManager::ApiOk(QString("Now streaming '%1' on bunny '%2'").arg(hRequest.GetArg("name"), QString(bunny->GetID())));
-	return new ApiManager::ApiError(QString("Can't stream '%1' on bunny '%2'").arg(hRequest.GetArg("name"), QString(bunny->GetID())));
+    return new ApiManager::ApiError(QString("Can't stream '%1' on bunny '%2'").arg(hRequest.GetArg("name"), QString(bunny->GetID())));
 }
 
 PLUGIN_BUNNY_API_CALL(PluginWizzflux::Api_AddWebcast)
