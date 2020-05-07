@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_tts.h
 SOURCES += plugin_tts.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_stats.h
 SOURCES += plugin_stats.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

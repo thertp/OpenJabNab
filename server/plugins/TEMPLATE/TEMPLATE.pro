@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_TEMPLATELOWER.h
 SOURCES += plugin_TEMPLATELOWER.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_taichi.h
 SOURCES += plugin_taichi.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

@@ -71,3 +71,6 @@ SOURCES +=	httphandler.cpp \
 			account.cpp \
 			netdump.cpp \
 			iq.cpp
+
+target.path = $$[QT_INSTALL_LIBS]
+INSTALLS += target

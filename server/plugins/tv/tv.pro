@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_tv.h
 SOURCES += plugin_tv.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

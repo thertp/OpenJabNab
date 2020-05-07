@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_ears.h
 SOURCES += plugin_ears.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

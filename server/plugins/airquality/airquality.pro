@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_airquality.h
 SOURCES += plugin_airquality.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

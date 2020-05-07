@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_msgall.h
 SOURCES += plugin_msgall.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

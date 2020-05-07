@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_weather.h
 SOURCES += plugin_weather.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

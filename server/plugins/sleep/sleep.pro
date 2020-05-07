@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_sleep.h
 SOURCES += plugin_sleep.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

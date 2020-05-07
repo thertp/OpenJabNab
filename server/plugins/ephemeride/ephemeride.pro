@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_ephemeride.h
 SOURCES += plugin_ephemeride.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

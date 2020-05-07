@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_wizzflux.h
 SOURCES += plugin_wizzflux.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_cinema.h
 SOURCES += plugin_cinema.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

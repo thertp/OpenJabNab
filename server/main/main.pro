@@ -25,3 +25,6 @@ unix {
 # Input
 HEADERS += openjabnab.h
 SOURCES += main.cpp openjabnab.cpp
+
+target.path = $$[QT_INSTALL_PREFIX]/bin
+INSTALLS += target

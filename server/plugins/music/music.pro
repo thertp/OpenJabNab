@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_music.h
 SOURCES += plugin_music.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

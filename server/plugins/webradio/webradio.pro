@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_webradio.h
 SOURCES += plugin_webradio.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

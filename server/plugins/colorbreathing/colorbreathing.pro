@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_colorbreathing.h
 SOURCES += plugin_colorbreathing.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

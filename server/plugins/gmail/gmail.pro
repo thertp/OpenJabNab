@@ -26,3 +26,5 @@ QMAKE_CXXFLAGS += -Werror
 HEADERS += plugin_gmail.h
 SOURCES += plugin_gmail.cpp
 
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

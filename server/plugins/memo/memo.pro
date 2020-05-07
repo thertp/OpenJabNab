@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_memo.h
 SOURCES += plugin_memo.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target

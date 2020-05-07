@@ -25,3 +25,5 @@ unix {
 # Input
 HEADERS += plugin_clock.h
 SOURCES += plugin_clock.cpp
+target.path = $$[QT_INSTALL_LIBS]/openjabnab/plugins
+INSTALLS += target
