@@ -28,7 +28,7 @@ $sleep = "";
 $lists = $ojnAPI->getApiList("bunny/".$_SESSION['bunny']."/sleep/getsetup?".$ojnAPI->getToken());
 if(count($lists) == 14) {
 	foreach($lists as $i=>$v)
-		$lists[$i] = substr($v,0,-3);
+		$lists[$i] = substr($v,0,-7);
 } else
 	for($i=0;$i<7;$i++) {
 		$lists[$i] = '10:00';
