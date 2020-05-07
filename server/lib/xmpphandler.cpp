@@ -1,12 +1,13 @@
 #include <QDateTime>
 #include <QRegExp>
+#include <QTcpServer>
 #include "bunny.h"
 #include "bunnymanager.h"
 #include "iq.h"
 #include "log.h"
 #include "messagepacket.h"
 #include "netdump.h"
-#include "openjabnab.h"
+#include "pluginmanager.h"
 #include "settings.h"
 #include "ttsmanager.h"
 #include "xmpphandler.h"

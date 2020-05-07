@@ -7,7 +7,7 @@
 #include "httprequest.h"
 #include "log.h"
 #include "netdump.h"
-#include "openjabnab.h"
+#include "pluginmanager.h"
 #include "settings.h"
 
 HttpHandler::HttpHandler(QTcpSocket * s, bool api, bool violetapi):pluginManager(PluginManager::Instance())

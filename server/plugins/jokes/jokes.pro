@@ -10,7 +10,7 @@ INCLUDEPATH += . ../../server ../../lib
 TARGET = plugin_jokes
 DESTDIR = ../../bin/plugins
 DEPENDPATH += . ../../server ../../lib
-LIBS += -L../../bin/ -lcommon
+LIBS += -L../../bin/ -lopenjabnab
 MOC_DIR = ./tmp/moc
 OBJECTS_DIR = ./tmp/obj
 win32 {
