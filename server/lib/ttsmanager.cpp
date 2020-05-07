@@ -13,14 +13,8 @@
 
 TTSManager::TTSManager()
 {
-	ttsDir = QCoreApplication::applicationDirPath();
+	ttsDir = GlobalSettings::TTSPluginDir();
 	ttsDir.setNameFilters(QStringList("*.so"));
-
-	if (!ttsDir.cd("tts"))
-	{
-		LogError("Unable to open tts directory !\n");
-		exit(-1);
-	}
 }
 
 TTSManager & TTSManager::Instance()

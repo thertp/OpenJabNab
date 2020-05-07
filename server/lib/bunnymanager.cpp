@@ -5,8 +5,7 @@
 
 BunnyManager::BunnyManager()
 {
-	bunniesDir = QCoreApplication::applicationDirPath();
-	bunniesDir.cd("bunnies");
+	bunniesDir = GlobalSettings::BunniesDir();
 }
 
 BunnyManager & BunnyManager::Instance()

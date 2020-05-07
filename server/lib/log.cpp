@@ -19,8 +19,8 @@ Log::Log()
 
 	maxFileLogLevel = GetLevel(GlobalSettings::GetString("Log/LogFileLevel", "Debug"));
 	maxScreenLogLevel = GetLevel(GlobalSettings::GetString("Log/LogScreenLevel", "Warning"));
-	
-	logFile = new QFile(QDir(QCoreApplication::applicationDirPath()).absoluteFilePath(GlobalSettings::GetString("Log/LogFile")));
+	logFileName = GlobalSettings::LogDir().absoluteFilePath(GlobalSettings::GetString("Log/LogFile"));
+	logFile = new QFile(logFileName);
 	if(!logFile->open(QIODevice::Append))
 	{
 		std::cerr << "Error opening file : " << qPrintable(logFile->fileName()) << std::endl << "Logging only on screen !" << std::endl;
@@ -41,15 +41,13 @@ void Log::LogToFile(QString const& data, LogLevel level, bool rotate)
 
 	if(rotate)
 	{
-		QString fileName = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath(GlobalSettings::GetString("Log/LogFile"));
-
-		QString archiveName = fileName;
+		QString archiveName = instance.logFileName;
 		archiveName.replace(".log", "." + QDateTime::currentDateTime().addDays(-1).toString("yyyyMMdd") + ".log");
 		instance.logFile->rename(archiveName);
 
 		instance.logFile = NULL;
 		delete instance.logFile;
-		instance.logFile = new QFile(QDir(QCoreApplication::applicationDirPath()).absoluteFilePath(GlobalSettings::GetString("Log/LogFile")));
+		instance.logFile = new QFile(instance.logFileName);
         	if(!instance.logFile->open(QIODevice::Append))
         	{
         	        std::cerr << "Error opening file : " << qPrintable(instance.logFile->fileName()) << std::endl << "Logging only on screen !" << std::endl;

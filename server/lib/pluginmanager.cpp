@@ -1,6 +1,6 @@
-#include <QCoreApplication>
 #include <QDir>
 #include <QLibrary>
+#include <QLibraryInfo>
 #include <QPluginLoader>
 #include <QString>
 #include "apimanager.h"
@@ -13,8 +13,7 @@
 PluginManager::PluginManager()
 {
 	// Load all plugins
-	pluginsDir = QCoreApplication::applicationDirPath();
-	pluginsDir.cd("plugins");
+	pluginsDir = GlobalSettings::PluginDir();
 }
 
 PluginManager & PluginManager::Instance()

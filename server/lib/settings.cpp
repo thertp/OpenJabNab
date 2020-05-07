@@ -8,7 +8,8 @@
 
 GlobalSettings::GlobalSettings()
 {
-	QString fileName = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("openjabnab.ini");
+	QDir confdir = SettingsDir();
+	QString fileName = confdir.absoluteFilePath("openjabnab.ini");
 	if (QFile::exists(fileName))
 		settings = new QSettings(fileName, QSettings::IniFormat);
 	else

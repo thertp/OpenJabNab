@@ -7,8 +7,7 @@ inline PluginInterface::PluginInterface(QString name, QString visualName, Plugin
 	else
 		pluginVisualName = name;
 	// Create settings object
-	QDir dir = QDir(QCoreApplication::applicationDirPath());
-	dir.cd("plugins");
+	QDir dir = GlobalSettings::PluginSettingsDir();
 	settings = new QSettings(dir.absoluteFilePath("plugin_"+pluginName+".ini"), QSettings::IniFormat);
 	pluginEnable = GetSettings("pluginStatus/Enable", QVariant(true)).toBool();
 	// Compute Plugin's Http path

@@ -19,16 +19,7 @@
 
 AccountManager::AccountManager()
 {
-	accountsDir = QCoreApplication::applicationDirPath();
-	if (!accountsDir.cd("accounts"))
-	{
-		if (!accountsDir.mkdir("accounts"))
-		{
-			LogError("Unable to create accounts directory !\n");
-			exit(-1);
-		}
-		accountsDir.cd("accounts");
-	}
+	accountsDir = GlobalSettings::AccountsDir();
 }
 
 AccountManager & AccountManager::Instance()

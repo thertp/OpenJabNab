@@ -9,8 +9,7 @@ inline TTSInterface::TTSInterface(QString name, QString visualName):ttsName(name
 	else
 		ttsVisualName = name;
 	// Create settings object
-	QDir dir = QDir(QCoreApplication::applicationDirPath());
-	dir.cd("tts");
+	QDir dir = GlobalSettings::TTSSettingsDir();
 	settings = new QSettings(dir.absoluteFilePath("tts_"+ttsName+".ini"), QSettings::IniFormat);
 	ttsEnable = GetSettings("ttsStatus/Enable", QVariant(true)).toBool();
 

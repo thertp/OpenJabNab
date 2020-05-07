@@ -23,6 +23,7 @@ private:
 	LogLevel maxFileLogLevel;
 	LogLevel maxScreenLogLevel;
 	QFile * logFile;
+	QString logFileName;
 };
 
 #define LogRotate() Log::LogToFile("Rotate log", Log::Log_Info, true)

@@ -17,16 +17,7 @@
 Ztamp::Ztamp(QByteArray const& ztampID)
 {
 	// Check ztamps folder
-	QDir ztampsDir = QDir(QCoreApplication::applicationDirPath());
-	if (!ztampsDir.cd("ztamps"))
-	{
-		if (!ztampsDir.mkdir("ztamps"))
-		{
-			LogError("Unable to create ztamps directory !\n");
-			exit(-1);
-		}
-		ztampsDir.cd("ztamps");
-	}
+	QDir ztampsDir = GlobalSettings::ZtampDir();
 	id = ztampID;
 	configFileName = ztampsDir.absoluteFilePath(ztampID.toHex()+".dat");
 

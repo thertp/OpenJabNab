@@ -28,16 +28,7 @@ Bunny::Bunny(QByteArray const& bunnyID)
 	doubleClickPlugin = NULL;
 
 	// Check bunnies folder
-	QDir bunniesDir = QDir(QCoreApplication::applicationDirPath());
-	if (!bunniesDir.cd("bunnies"))
-	{
-		if (!bunniesDir.mkdir("bunnies"))
-		{
-			LogError("Unable to create bunnies directory !\n");
-			exit(-1);
-		}
-		bunniesDir.cd("bunnies");
-	}
+	QDir bunniesDir = GlobalSettings::BunniesDir();
 	id = bunnyID;
 	state = State_Disconnected;
 	configFileName = bunniesDir.absoluteFilePath(bunnyID.toHex()+".dat");
