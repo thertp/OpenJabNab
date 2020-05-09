@@ -85,6 +85,7 @@ inline int GlobalSettings::GetInt(QString const& key, int defaultValue)
 inline QDir GlobalSettings::CheckSettingsDir(QString subdir)
 {
 	QString base = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+	QStringList baselist = QStandardPaths::standardLocations(QStandardPaths::AppConfigLocation);
 	QDir basedir = QDir(base);
 	QDir compat = QDir(QCoreApplication::applicationDirPath());
 
@@ -103,10 +104,23 @@ inline QDir GlobalSettings::CheckSettingsDir(QString subdir)
 		return compat;
 	}
 
-	if (base.length() == 0) {
+	if ((baselist.length() == 0) && (base.length() == 0)) {
 		LogError("Unable to determine settings directory to use\n");
 		exit(-1);
 	}
+
+	/*
+         * Try to find configuration directory
+         */
+	for (int i = 0; i < baselist.length(); ++i) {
+		QDir d = QDir(baselist.at(i));
+		if (d.exists() && d.cd(subdir))
+			return  d;
+	}
+
+	/*
+	 * Configuration directory not found, so use writable configuration dir
+	 */
 	if (!basedir.exists()) {
 		if (!basedir.mkpath(".")) {
 			LogError("Unable to create " + basedir.path() + "settings directory !\n");
